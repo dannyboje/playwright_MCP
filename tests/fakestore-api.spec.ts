@@ -51,8 +51,27 @@ test('GET /products/1 - Validate response structure and data types', async ({ re
   expect(response.status()).toBe(200);
   console.log(`✓ Status Code: ${response.status()}`);
 
+  // Check content type
+  const contentType = response.headers()['content-type'] || '';
+  console.log(`✓ Content-Type: ${contentType}`);
+
+  if (!contentType.includes('application/json')) {
+    console.error('❌ Response is not JSON. Received:', contentType);
+    const responseText = await response.text();
+    console.error('Response text:', responseText.substring(0, 200));
+    throw new Error(`Expected JSON response, got ${contentType}`);
+  }
+
   // Get response body
-  const productData = await response.json();
+  let productData;
+  try {
+    productData = await response.json();
+  } catch (error) {
+    const responseText = await response.text();
+    console.error('Failed to parse JSON response');
+    console.error('Response text:', responseText.substring(0, 500));
+    throw error;
+  }
   console.log('\n📦 Response Body:', JSON.stringify(productData, null, 2));
 
   // Step 3: Validate response contains required keys
@@ -118,9 +137,35 @@ test('GET /products/1 - Complete response validation', async ({ request }) => {
 
   console.log('\n========== Extended API Test ==========');
 
-  // Send request
+  // Send request with error handling
   const response = await request.get(apiEndpoint);
-  const productData = await response.json();
+  
+  // Verify response status and content type
+  console.log(`📊 Response Status: ${response.status()}`);
+  const contentType = response.headers()['content-type'] || '';
+  console.log(`📄 Content-Type: ${contentType}`);
+
+  if (!response.ok()) {
+    console.error(`❌ API request failed with status ${response.status()}`);
+    const responseText = await response.text();
+    console.error('Response:', responseText.substring(0, 200));
+    throw new Error(`API returned status ${response.status()}`);
+  }
+
+  if (!contentType.includes('application/json')) {
+    console.error(`❌ Expected JSON, got ${contentType}`);
+    throw new Error(`Expected JSON response, got ${contentType}`);
+  }
+
+  let productData;
+  try {
+    productData = await response.json();
+  } catch (error) {
+    console.error('Failed to parse JSON');
+    const responseText = await response.text();
+    console.error('Response text:', responseText.substring(0, 500));
+    throw error;
+  }
 
   // Verify all required keys with meaningful assertions
   const requiredKeys = {
