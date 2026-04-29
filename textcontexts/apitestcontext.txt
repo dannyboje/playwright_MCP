@@ -6,4 +6,4 @@
 6  - Use async/await syntax. 
 7 - Print useful logs for debugging if needed.
 8  - Export the test to a `.spec.ts` file under the `/tests` folder.
-9  Do not generate test code until all steps are fully explored and validated.
+9 - Do not generate test code until all steps are fully explored and validated.
