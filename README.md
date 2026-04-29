@@ -9,6 +9,7 @@ A comprehensive end-to-end testing project using **Playwright Test** framework w
 - [Project Structure](#project-structure)
 - [Available Tests](#available-tests)
 - [Running Tests](#running-tests)
+- [Test Reports & Allure](#test-reports--allure)
 - [CI/CD & Git Automation](#cicd--git-automation)
 - [Configuration](#configuration)
 - [NPM Scripts](#npm-scripts)
@@ -94,14 +95,19 @@ playwright_MCP/
 │   └── validate-all-elements.spec.ts   # Test: Validate all page elements
 ├── textcontexts/
 │   └── webtestcontext.txt              # Test generation context
-├── playwright-report/                  # Generated test reports (HTML)
-├── test-results/                       # Test results artifacts
+├── playwright-report/                  # Generated HTML test reports
+├── allure-report/                      # Generated Allure interactive reports
+├── allure-results/                     # Allure test result artifacts
+├── test-results/                       # Playwright test results artifacts
 ├── .gitignore                          # Git ignore patterns
 ├── playwright.config.ts                # Playwright configuration
 ├── package.json                        # NPM dependencies & scripts
 ├── package-lock.json                   # Locked dependency versions
 ├── setup-git-hooks.sh                  # Git hooks setup script
+├── ALLURE_REPORTING.md                 # Allure reporting documentation
 ├── GIT_TEST_AUTOMATION.md              # Git automation documentation
+├── POM_DOCUMENTATION.md                # Page Object Model documentation
+├── API_TESTING_GUIDE.md                # API testing with schema validation
 └── README.md                           # This file
 ```
 
@@ -202,7 +208,70 @@ npx playwright show-report
 
 ---
 
-## 🔄 CI/CD & Git Automation
+## � Test Reports & Allure
+
+### Allure Test Reports
+
+This project integrates **Allure Reports** for comprehensive, interactive test analytics:
+
+**Features:**
+- 📊 Detailed test statistics and status breakdown
+- 📈 Test history and trend analysis
+- 🔍 Step-by-step execution logs with attachments
+- 🏷️ Test categorization by status, severity, and custom labels
+- 📱 Responsive, mobile-friendly dashboard
+
+### Generating Allure Reports
+
+**Complete workflow (test + report + open):**
+```bash
+npm run test:allure
+```
+
+**Individual steps:**
+```bash
+# Run tests and collect results
+npm test
+
+# Generate Allure HTML report
+npm run allure:report
+
+# Open report in browser
+npm run allure:open
+```
+
+### Report Output
+
+After running tests, reports are available in:
+- **Playwright HTML Report:** `playwright-report/index.html`
+- **Allure Report:** `allure-report/index.html`
+- **Test Results:** `test-results/` directory
+
+### Report Directories
+
+```
+allure-results/       # Test result JSON files (created by npm test)
+allure-report/        # Generated HTML report (created by npm run allure:report)
+```
+
+### Viewing Reports
+
+```bash
+# Open Allure report
+npm run allure:open
+
+# Or manually open in browser
+open allure-report/index.html
+
+# View Playwright report
+npx playwright show-report
+```
+
+For detailed Allure documentation, see [ALLURE_REPORTING.md](ALLURE_REPORTING.md).
+
+---
+
+## �🔄 CI/CD & Git Automation
 
 ### GitHub Actions Workflow
 
@@ -287,12 +356,30 @@ Project supports TypeScript with strict typing:
 
 ## 📦 NPM Scripts
 
+### Core Test Commands
+
 ```bash
 npm test                  # Run all tests (headless, parallel)
 npm run test:headed      # Run tests with visible browser
 npm run test:debug       # Run tests in debug mode
 npm run test:ui          # Run tests in interactive UI mode
 ```
+
+### Allure Reporting Commands
+
+```bash
+npm run test:allure      # Run tests + generate Allure report + open it
+npm run allure:report    # Generate HTML Allure report from results
+npm run allure:open      # Open existing Allure report in browser
+```
+
+**Allure Reporting Integration:**
+- 📊 Interactive test dashboards with statistics
+- 📈 Detailed test history and trends
+- 🔍 Step-by-step execution logs with attachments
+- 📱 Mobile-friendly responsive UI
+
+See [ALLURE_REPORTING.md](ALLURE_REPORTING.md) for comprehensive Allure documentation.
 
 ### Adding Custom Scripts
 
